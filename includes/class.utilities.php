@@ -117,7 +117,7 @@ class EOP_Utilities {
 				}
 				//Only continue processing the first valid path segment
 				if ( $first )
-					!!$first;
+					$first = !$first;
 				else
 					continue;
 				//Add back leading slash if necessary
@@ -142,8 +142,7 @@ class EOP_Utilities {
 	 */
 	function get_file_url($file) {
 		if (is_string($file) && '' != trim($file)) {
-			$file = ltrim(trim($file), '/');
-			$file = sprintf('%s/%s', $this->get_url_base(), $file);
+			$file = $this->normalize_path($this->get_url_base(), $file);
 		}
 		return $file;
 	}
@@ -546,29 +545,28 @@ class EOP_Utilities {
 	 * @global array $submenu Admin page submenus
 	 */
 	function add_submenu_page($parent, $page_title, $menu_title, $capability, $file, $function = '', $pos = false) {
-		
 		//Add submenu page as usual
 		$args = func_get_args();
 		$hookname = call_user_func_array('add_submenu_page', $args);
-		
 		if ( is_int($pos) ) {
 			global $submenu;
 			//Get last submenu added
 			$parent = $this->get_submenu_parent_file($parent);
-			$subs =& $submenu[$parent];
-
-			//Make sure menu isn't already in the desired position
-			if ( $pos <= ( count($subs) - 1 ) ) {
-				//Get submenu that was just added
-				$sub = array_pop($subs);
-				//Insert into desired position
-				if ( 0 == $pos ) {
-					array_unshift($subs, $sub);
-				} else {
-					$top = array_slice($subs, 0, $pos);
-					$bottom = array_slice($subs, $pos);
-					array_push($top, $sub);
-					$subs = array_merge($top, $bottom);
+			if ( isset($submenu[$parent]) ) {
+				$subs =& $submenu[$parent];
+				//Make sure menu isn't already in the desired position
+				if ( $pos <= ( count($subs) - 1 ) ) {
+					//Get submenu that was just added
+					$sub = array_pop($subs);
+					//Insert into desired position
+					if ( 0 == $pos ) {
+						array_unshift($subs, $sub);
+					} else {
+						$top = array_slice($subs, 0, $pos);
+						$bottom = array_slice($subs, $pos);
+						array_push($top, $sub);
+						$subs = array_merge($top, $bottom);
+					}
 				}
 			}
 		}
