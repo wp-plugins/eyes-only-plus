@@ -1,5 +1,6 @@
 === Eyes Only ===
 Contributors: Archetyped
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AF29GFAFMT83N
 Tags: privacy, private, security, redact, redaction, hide, hidden, anonymous
 Plugin Link: http://archetyped.com/tools/eyes-only/
 Requires at least: 3.0
